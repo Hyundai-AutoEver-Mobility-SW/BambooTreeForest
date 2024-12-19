@@ -44,7 +44,7 @@
                                                             <attributedString key="attributedText">
                                                                 <fragment content="2024-12-19">
                                                                     <attributes>
-                                                                        <font key="NSFont" size="13" name="Kodchasan-Regular"/>
+                                                                        <font key="NSFont" metaFont="system"/>
                                                                         <paragraphStyle key="NSParagraphStyle" alignment="right" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                                                     </attributes>
                                                                 </fragment>

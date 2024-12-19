@@ -6,14 +6,19 @@
 //
 
 import UIKit
+import FirebaseCore
 
 @main
 class AppDelegate: UIResponder, UIApplicationDelegate {
-
+    
+    var window: UIWindow?
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Override point for customization after application launch.
+        FirebaseApp.configure()
+        
+        // 추가적인 앱 초기화 코드
         return true
     }
 
