@@ -6,9 +6,16 @@
 //
 
 import UIKit
+import FirebaseCore
+import FirebaseFirestore
 
 class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
+    
+    let db = Firestore.firestore()
+    // Firestore에서 불러온 데이터를 저장할 배열
+    var dataArray: [String] = []
+    
     
     // Bar Button Item 눌렀을 때 실행되는 액션
     @IBAction func writeButtonTapped(_ sender: UIBarButtonItem) {
@@ -27,7 +34,7 @@ class ViewController: UIViewController {
     }
     
     // 테이블뷰에 보여줄 데이터 배열
-    var dataArray = ["첫번째 항목", "두번째 항목", "세째 항목"]
+    // var dataArray = ["첫번째 항목", "두번째 항목", "세째 항목"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -35,7 +42,28 @@ class ViewController: UIViewController {
         // 델리게이트 연결
         tableView.delegate = self
         tableView.dataSource = self
+        // Firestore에서 데이터 읽기
+        fetchDataFromFirestore()
     }
+    // Firestore에서 데이터를 가져오는 함수
+        func fetchDataFromFirestore() {
+            db.collection("posts").getDocuments { (snapshot, error) in
+                if let error = error {
+                    print("Firestore 데이터 가져오기 실패: \(error)")
+                    return
+                }
+                
+                guard let documents = snapshot?.documents else { return }
+                
+                // Firestore 문서 데이터를 배열에 저장 (추가된 부분)
+                self.dataArray = documents.compactMap { $0.data()["title"] as? String }
+                
+                // 테이블 뷰 업데이트 (추가된 부분)
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
+            }
+        }
 }
 
 // 테이블뷰 관련 메서드들
@@ -50,7 +78,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
         
         cell.titleLabel.text = dataArray[indexPath.row]
-        cell.descLabel.text = "설명 \(indexPath.row + 1)"
+        cell.descLabel.text = "파이어스토어에서 \(indexPath.row + 1)"
         
         return cell
     }
