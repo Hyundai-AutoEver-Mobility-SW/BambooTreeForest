@@ -4,10 +4,19 @@ import FirebaseFirestore
 
 class ViewController: UIViewController {
     // @IBOutlet weak var scrollView: UIScrollView!
-    @IBOutlet weak var tableView: UITableView!
+    @IBOutlet weak var tableView: UITableView! // 지우면 에러남
     
     let db = Firestore.firestore()
     var posts: [(title: String, createdAt: String, content: String, commentCount: Int, isLiked: Bool)] = []
+    
+    // 스크롤 뷰 생성
+    let scrollView: UIScrollView = {
+        let scrollView = UIScrollView()
+        scrollView.alwaysBounceHorizontal = false // 가로 스크롤 활성화
+               scrollView.alwaysBounceVertical = true  // 세로 스크롤 비활성화
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        return scrollView
+    }()
 
     let imageView: UIImageView = {
         let aImageView = UIImageView()
@@ -35,89 +44,28 @@ class ViewController: UIViewController {
             return view
         }()
     
-    // 제목, 날짜, 내용 레이블 추가
-    let titleLabel: UILabel = {
-            let label = UILabel()
-            label.textColor = UIColor(hex: "#000") // 텍스트 색상
-            label.font = UIFont(name: "Kodchasan", size: 20) // 폰트와 크기
-            label.numberOfLines = 1
-            label.textAlignment = .center // 중앙 정렬
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
-        }()
-
-        let dateLabel: UILabel = {
-            let label = UILabel()
-            label.textColor = .lightGray
-            label.font = UIFont.systemFont(ofSize: 16)
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
-        }()
-
-        let contentLabel: UILabel = {
-            let label = UILabel()
-            label.textColor = .white
-            label.font = UIFont.systemFont(ofSize: 18)
-            label.numberOfLines = 0
-            label.translatesAutoresizingMaskIntoConstraints = false
-            return label
-        }()
-
-
-    @IBAction func writeButtonTapped(_ sender: UIBarButtonItem) {
-        performSegue(withIdentifier: "ShowWriteVC", sender: nil)
-    }
-
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "ShowWriteVC" {
-            if let writeVC = segue.destination as? WriteViewController {
-                // 데이터 전달
-            }
-        }
-    }
-
     override func viewDidLoad() {
         super.viewDidLoad()
+
         // 배경 이미지 추가
         view.addSubview(imageView)
         NSLayoutConstraint.activate([
             imageView.topAnchor.constraint(equalTo: view.topAnchor),
             imageView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
             imageView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
-            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            imageView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
 
-        // boxView 추가
-        view.addSubview(boxView)
-        let margin: CGFloat = 30
+        // 스크롤 뷰 추가
+        view.addSubview(scrollView)
         NSLayoutConstraint.activate([
-            boxView.heightAnchor.constraint(equalToConstant: 500), // 높이 500으로 설정
-            boxView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: margin), // 상단 마진
-                boxView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: margin), // 좌측 마진
-                boxView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -margin) // 우측 마진
+            scrollView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
+            scrollView.leadingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.leadingAnchor),
+            scrollView.trailingAnchor.constraint(equalTo: view.safeAreaLayoutGuide.trailingAnchor),
+            scrollView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
         ])
-        
-        boxView.addSubview(titleLabel)
-            NSLayoutConstraint.activate([
-                titleLabel.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 20), // 상단에서 20pt 떨어짐
-                titleLabel.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 20),
-                titleLabel.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -20),
-            ])
 
-        // 박스 안에 테이블 뷰 추가
-        boxView.addSubview(tableView)
-        tableView.translatesAutoresizingMaskIntoConstraints = false
-        NSLayoutConstraint.activate([
-            tableView.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 20),
-            tableView.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 20),
-            tableView.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -20),
-            tableView.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -20)
-        ])
-        
-        // 테이블 뷰 설정
-        tableView.delegate = self
-        tableView.dataSource = self
-            
+        // Firestore 데이터 가져오기
         fetchDataFromFirestore()
     }
 
@@ -145,30 +93,92 @@ class ViewController: UIViewController {
             }
 
             DispatchQueue.main.async {
-                self.tableView.reloadData()
+                self.setupBoxes()
             }
         }
     }
+
+    func setupBoxes() {
+        var previousBox: UIView? = nil
+        let boxMargin: CGFloat = 20
+
+        for (index, data) in posts.enumerated() {
+            let boxView = createBoxView(title: data.title, description: data.content)
+            scrollView.addSubview(boxView)
+
+            NSLayoutConstraint.activate([
+                boxView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 30),
+                boxView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -30),
+                boxView.heightAnchor.constraint(equalToConstant: 500),
+                boxView.widthAnchor.constraint(equalToConstant: 280)
+            ])
+
+            if let previousBox = previousBox {
+                boxView.topAnchor.constraint(equalTo: previousBox.bottomAnchor, constant: boxMargin).isActive = true
+            } else {
+                boxView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20).isActive = true
+            }
+
+            previousBox = boxView
+
+            if index == posts.count - 1 {
+                boxView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20).isActive = true
+            }
+        }
+    }
+
+    func createBoxView(title: String, description: String) -> UIView {
+        let boxView = UIView()
+        boxView.backgroundColor = UIColor.clear // 투명 배경
+        boxView.layer.cornerRadius = 30
+        boxView.layer.borderWidth = 1
+//        boxView.layer.borderColor = UIColor.lightGray.cgColor
+        boxView.translatesAutoresizingMaskIntoConstraints = false
+
+        // 배경 이미지 추가
+        let backgroundImageView = UIImageView()
+        backgroundImageView.image = UIImage(named: "redBox")
+        backgroundImageView.contentMode = .scaleAspectFill
+        backgroundImageView.clipsToBounds = true
+        backgroundImageView.translatesAutoresizingMaskIntoConstraints = false
+        boxView.addSubview(backgroundImageView)
+
+        NSLayoutConstraint.activate([
+            backgroundImageView.topAnchor.constraint(equalTo: boxView.topAnchor),
+            backgroundImageView.bottomAnchor.constraint(equalTo: boxView.bottomAnchor),
+            backgroundImageView.leadingAnchor.constraint(equalTo: boxView.leadingAnchor),
+            backgroundImageView.trailingAnchor.constraint(equalTo: boxView.trailingAnchor)
+        ])
+
+        let titleLabel = UILabel()
+        titleLabel.text = title
+        titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
+        titleLabel.textColor = .black
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        let descriptionLabel = UILabel()
+        descriptionLabel.text = description
+        descriptionLabel.font = UIFont.systemFont(ofSize: 14)
+        descriptionLabel.textColor = .darkGray
+        descriptionLabel.numberOfLines = 0
+        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        boxView.addSubview(titleLabel)
+        boxView.addSubview(descriptionLabel)
+
+        NSLayoutConstraint.activate([
+            titleLabel.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 10),
+            titleLabel.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 10),
+            titleLabel.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -10),
+            titleLabel.heightAnchor.constraint(equalToConstant: 20),
+
+            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
+            descriptionLabel.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 10),
+            descriptionLabel.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -10),
+            descriptionLabel.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -10)
+        ])
+
+        return boxView
+    }
 }
 
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return posts.count
-    }
-
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
-
-        let post = posts[indexPath.row]
-        cell.titleLabel.text = post.title
-        cell.dateLabel.text = post.createdAt
-        cell.descLabel.text = post.content
-
-        return cell
-    }
-
-    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        print("\(indexPath.row)번 셀 선택됨")
-        tableView.deselectRow(at: indexPath, animated: true)
-    }
-}
