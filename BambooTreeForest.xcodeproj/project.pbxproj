@@ -6,8 +6,15 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		31440050BC78D6746579B419 /* Pods_BambooTreeForest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CD23898FAD2EDA3A27AC5886 /* Pods_BambooTreeForest.framework */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXFileReference section */
 		1334B6C32D13B27A00DB3EFD /* BambooTreeForest.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = BambooTreeForest.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		136F95986D906F103192AAA9 /* Pods-BambooTreeForest.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BambooTreeForest.release.xcconfig"; path = "Target Support Files/Pods-BambooTreeForest/Pods-BambooTreeForest.release.xcconfig"; sourceTree = "<group>"; };
+		34182C2DC15B849C70C11D6B /* Pods-BambooTreeForest.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-BambooTreeForest.debug.xcconfig"; path = "Target Support Files/Pods-BambooTreeForest/Pods-BambooTreeForest.debug.xcconfig"; sourceTree = "<group>"; };
+		CD23898FAD2EDA3A27AC5886 /* Pods_BambooTreeForest.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_BambooTreeForest.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -36,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				31440050BC78D6746579B419 /* Pods_BambooTreeForest.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -47,6 +55,8 @@
 			children = (
 				1334B6C52D13B27A00DB3EFD /* BambooTreeForest */,
 				1334B6C42D13B27A00DB3EFD /* Products */,
+				EF97616189C60E99B90D8D62 /* Pods */,
+				D2AD64D0E839C7CB3F1DAB42 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -58,6 +68,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		D2AD64D0E839C7CB3F1DAB42 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				CD23898FAD2EDA3A27AC5886 /* Pods_BambooTreeForest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EF97616189C60E99B90D8D62 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				34182C2DC15B849C70C11D6B /* Pods-BambooTreeForest.debug.xcconfig */,
+				136F95986D906F103192AAA9 /* Pods-BambooTreeForest.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -65,9 +92,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 1334B6D62D13B27C00DB3EFD /* Build configuration list for PBXNativeTarget "BambooTreeForest" */;
 			buildPhases = (
+				FA0C507F489AD6D18E4409D5 /* [CP] Check Pods Manifest.lock */,
 				1334B6BF2D13B27A00DB3EFD /* Sources */,
 				1334B6C02D13B27A00DB3EFD /* Frameworks */,
 				1334B6C12D13B27A00DB3EFD /* Resources */,
+				8A9EEC47438300F0878B1B48 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -77,8 +106,6 @@
 				1334B6C52D13B27A00DB3EFD /* BambooTreeForest */,
 			);
 			name = BambooTreeForest;
-			packageProductDependencies = (
-			);
 			productName = BambooTreeForest;
 			productReference = 1334B6C32D13B27A00DB3EFD /* BambooTreeForest.app */;
 			productType = "com.apple.product-type.application";
@@ -107,6 +134,9 @@
 			);
 			mainGroup = 1334B6BA2D13B27A00DB3EFD;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				4AC47CFB2D13E8F400AA88D4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 1334B6C42D13B27A00DB3EFD /* Products */;
 			projectDirPath = "";
@@ -127,6 +157,48 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		8A9EEC47438300F0878B1B48 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BambooTreeForest/Pods-BambooTreeForest-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-BambooTreeForest/Pods-BambooTreeForest-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-BambooTreeForest/Pods-BambooTreeForest-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		FA0C507F489AD6D18E4409D5 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-BambooTreeForest-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		1334B6BF2D13B27A00DB3EFD /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -140,6 +212,7 @@
 /* Begin XCBuildConfiguration section */
 		1334B6D72D13B27C00DB3EFD /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 34182C2DC15B849C70C11D6B /* Pods-BambooTreeForest.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -168,6 +241,7 @@
 		};
 		1334B6D82D13B27C00DB3EFD /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 136F95986D906F103192AAA9 /* Pods-BambooTreeForest.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
@@ -231,7 +305,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -294,7 +368,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = NO;
 				GCC_C_LANGUAGE_STANDARD = gnu17;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -335,6 +409,17 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		4AC47CFB2D13E8F400AA88D4 /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/firebase/firebase-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 11.6.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
 	};
 	rootObject = 1334B6BB2D13B27A00DB3EFD /* Project object */;
 }
