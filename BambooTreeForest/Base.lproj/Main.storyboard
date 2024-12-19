@@ -63,6 +63,15 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="SN3-68-dmh">
+                                                    <rect key="frame" x="159" y="276" width="75" height="35"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <state key="normal" title="Button"/>
+                                                    <buttonConfiguration key="configuration" style="plain" title="Button"/>
+                                                    <connections>
+                                                        <segue destination="4vd-1K-RM7" kind="show" id="917-4W-DHv"/>
+                                                    </connections>
+                                                </button>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailingMargin" secondItem="soH-oU-gqW" secondAttribute="trailing" constant="16" id="10f-2c-naj"/>
@@ -120,7 +129,7 @@
                         <viewLayoutGuide key="safeArea" id="RVA-gK-ESd"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </view>
-                    <navigationItem key="navigationItem" id="zO2-ev-ISI"/>
+                    <navigationItem key="navigationItem" id="WkL-yA-mZ7"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ldy-cB-l5E" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
@@ -143,6 +152,22 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="mEv-Ra-B19" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="130.53435114503816" y="-28.169014084507044"/>
+        </scene>
+        <!--Comment View Controller-->
+        <scene sceneID="2Vo-9Y-9cK">
+            <objects>
+                <viewController id="4vd-1K-RM7" customClass="CommentViewController" customModule="BambooTreeForest" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="FPy-zK-gAL">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="MCT-4V-Ppj"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="3cj-U1-KaM"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="oXU-cS-YkX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1055.7251908396945" y="757.74647887323943"/>
         </scene>
     </scenes>
     <resources>
