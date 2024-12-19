@@ -14,7 +14,7 @@ class ViewController: UIViewController {
     
     let db = Firestore.firestore()
     // Firestore에서 불러온 데이터를 저장할 배열
-    var dataArray: [String] = []
+    var posts: [(title: String, createdAt: String, content: String, commentCount: Int, isLiked: Bool)] = []
     
     
     // Bar Button Item 눌렀을 때 실행되는 액션
@@ -55,8 +55,20 @@ class ViewController: UIViewController {
                 
                 guard let documents = snapshot?.documents else { return }
                 
-                // Firestore 문서 데이터를 배열에 저장 (추가된 부분)
-                self.dataArray = documents.compactMap { $0.data()["title"] as? String }
+                // Firestore 문서 데이터를 배열에 저장
+                self.posts = documents.compactMap { doc -> (String, String, String, Int, Bool)? in
+                                let data = doc.data()
+                                
+                                guard
+                                    let title = data["title"] as? String,
+                                    let createdAt = data["createdAt"] as? String,
+                                    let content = data["content"] as? String,
+                                    let commentCount = data["commentCount"] as? Int,
+                                    let isLiked = data["isLiked"] as? Bool
+                                else { return nil }
+                                
+                                return (title, createdAt, content, commentCount, isLiked)
+                            }
                 
                 // 테이블 뷰 업데이트 (추가된 부분)
                 DispatchQueue.main.async {
@@ -70,16 +82,19 @@ class ViewController: UIViewController {
 extension ViewController: UITableViewDelegate, UITableViewDataSource {
     // 행 개수 설정
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return dataArray.count
+        return posts.count
     }
     
     // 셀 구성
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "CustomCell", for: indexPath) as! CustomTableViewCell
         
-        cell.titleLabel.text = dataArray[indexPath.row]
-        cell.descLabel.text = "파이어스토어에서 \(indexPath.row + 1)"
-        
+        let post = posts[indexPath.row]
+                // Firestore에서 가져온 데이터 표시
+                cell.titleLabel.text = post.title // 제목 표시
+        cell.dateLabel.text = post.createdAt
+        cell.descLabel.text = post.content
+                
         return cell
     }
     
