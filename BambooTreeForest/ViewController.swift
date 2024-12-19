@@ -3,12 +3,11 @@ import FirebaseCore
 import FirebaseFirestore
 
 class ViewController: UIViewController {
-    @IBOutlet weak var scrollView: UIScrollView!
+    // @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var tableView: UITableView!
     
     let db = Firestore.firestore()
     var posts: [(title: String, createdAt: String, content: String, commentCount: Int, isLiked: Bool)] = []
-    
 
     let imageView: UIImageView = {
         let aImageView = UIImageView()
@@ -47,22 +46,22 @@ class ViewController: UIViewController {
             return label
         }()
 
-    let dateLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .lightGray
-        label.font = UIFont.systemFont(ofSize: 16)
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+        let dateLabel: UILabel = {
+            let label = UILabel()
+            label.textColor = .lightGray
+            label.font = UIFont.systemFont(ofSize: 16)
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
 
-    let contentLabel: UILabel = {
-        let label = UILabel()
-        label.textColor = .white
-        label.font = UIFont.systemFont(ofSize: 18)
-        label.numberOfLines = 0
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
+        let contentLabel: UILabel = {
+            let label = UILabel()
+            label.textColor = .white
+            label.font = UIFont.systemFont(ofSize: 18)
+            label.numberOfLines = 0
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
 
 
     @IBAction func writeButtonTapped(_ sender: UIBarButtonItem) {
@@ -79,7 +78,6 @@ class ViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         // 배경 이미지 추가
         view.addSubview(imageView)
         NSLayoutConstraint.activate([
@@ -100,25 +98,26 @@ class ViewController: UIViewController {
         ])
         
         boxView.addSubview(titleLabel)
-                NSLayoutConstraint.activate([
-                    titleLabel.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 20), // 상단에서 20pt 떨어짐
-                    titleLabel.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 20),
-                    titleLabel.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -20),
-                ])
+            NSLayoutConstraint.activate([
+                titleLabel.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 20), // 상단에서 20pt 떨어짐
+                titleLabel.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 20),
+                titleLabel.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -20),
+            ])
 
-        // tableView를 boxView 안에 추가
-//        boxView.addSubview(tableView)
-//        tableView.translatesAutoresizingMaskIntoConstraints = false
-//        NSLayoutConstraint.activate([
-//            tableView.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 20), // 상단 패딩
-//            tableView.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -20), // 하단 패딩
-//            tableView.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 20), // 좌측 패딩
-//            tableView.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -20), // 우측 패딩
-//        ])
-//
-//        // Firestore 데이터 및 델리게이트 연결
-//        tableView.delegate = self
-//        tableView.dataSource = self
+        // 박스 안에 테이블 뷰 추가
+        boxView.addSubview(tableView)
+        tableView.translatesAutoresizingMaskIntoConstraints = false
+        NSLayoutConstraint.activate([
+            tableView.topAnchor.constraint(equalTo: boxView.topAnchor, constant: 20),
+            tableView.leadingAnchor.constraint(equalTo: boxView.leadingAnchor, constant: 20),
+            tableView.trailingAnchor.constraint(equalTo: boxView.trailingAnchor, constant: -20),
+            tableView.bottomAnchor.constraint(equalTo: boxView.bottomAnchor, constant: -20)
+        ])
+        
+        // 테이블 뷰 설정
+        tableView.delegate = self
+        tableView.dataSource = self
+            
         fetchDataFromFirestore()
     }
 
