@@ -21,5 +21,14 @@
 			</array>
 		</dict>
 	</dict>
+	<key>UIAppFonts</key>
+	<array>
+		<string>Kodchasan-Regular.ttf</string>
+		<string>Kodchasan-Light.ttf</string>
+		<string>Kodchasan-Bold.ttf</string>
+		<string>Kodchasan-Medium.ttf</string>
+		<string>Kodchasan-SemiBold.ttf</string>
+		<string>Kodchasan-ExtraLight.ttf</string>
+	</array>
 </dict>
 </plist>
