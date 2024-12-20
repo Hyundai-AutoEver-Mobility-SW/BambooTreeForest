@@ -54,6 +54,7 @@ class PostBoxView: UIView {
             let titleLabel = createTitleLabel(text: title)
             let dateLabel = createDateLabel(text: date)
             let contentLabel = createContentLabel(text: content)
+            let actionButton = createActionButton(commentCount: commentCount, isLiked: isLiked) // 버튼 생성
         
             // 구분선 추가
             let separatorView = UIView()
@@ -65,6 +66,7 @@ class PostBoxView: UIView {
             contentContainer.addSubview(dateLabel)
             contentContainer.addSubview(separatorView)
             contentContainer.addSubview(contentLabel)
+            contentContainer.addSubview(actionButton)
 
             NSLayoutConstraint.activate([
                 // Title Label
@@ -87,7 +89,13 @@ class PostBoxView: UIView {
                 contentLabel.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 10),
                 contentLabel.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
                 contentLabel.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
-                contentLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentContainer.bottomAnchor)
+                contentLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentContainer.bottomAnchor),
+                
+                // Action Button
+                actionButton.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor, constant: 0),
+                actionButton.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor, constant: 0),
+                actionButton.bottomAnchor.constraint(equalTo: contentContainer.bottomAnchor, constant: 0),
+                actionButton.heightAnchor.constraint(equalToConstant: 43),
             ])
         }
     }
