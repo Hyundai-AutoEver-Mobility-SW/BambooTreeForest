@@ -89,14 +89,14 @@ class ViewController: UIViewController {
                 self?.setupBoxes()
             }
         }
-    // Firestore에서 데이터를 가져오는 함수
+        // Firestore에서 데이터를 가져오는 함수
         func fetchDataFromFirestore() {
             db.collection("posts").getDocuments { (snapshot, error) in
                 if let error = error {
                     print("Firestore 데이터 가져오기 실패: \(error)")
                     return
                 }
-                 
+                
                 guard let documents = snapshot?.documents else { return }
                 
                 // Firestore 문서 데이터를 배열에 저장 (추가된 부분)
@@ -109,6 +109,8 @@ class ViewController: UIViewController {
                 }
             }
         }
+    }
+        
 }
 
 // 테이블뷰 관련 메서드들

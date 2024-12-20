@@ -10,7 +10,7 @@ import FirebaseFirestore
 class FirestoreService {
     private let db = Firestore.firestore()
 
-    func fetchPosts(completion: @escaping ([(title: String, createdAt: String, content: String, commentCount: Int, isLiked: Bool)]) -> Void) {
+    func fetchPosts(completion: @escaping ([(id: String, title: String, createdAt: String, content: String, commentCount: Int, isLiked: Bool)]) -> Void) {
         db.collection("posts").getDocuments { snapshot, error in
             if let error = error {
                 print("Firestore 데이터 가져오기 실패: \(error)")
@@ -18,7 +18,8 @@ class FirestoreService {
                 return
             }
 
-            let posts = snapshot?.documents.compactMap { doc -> (String, String, String, Int, Bool)? in
+            let posts = snapshot?.documents.compactMap { doc -> (String, String, String, String, Int, Bool)? in
+                let id = doc.documentID // 문서 ID
                 let data = doc.data()
 
                 guard
@@ -29,7 +30,7 @@ class FirestoreService {
                     let isLiked = data["isLiked"] as? Bool
                 else { return nil }
 
-                return (title, createdAt, content, commentCount, isLiked)
+                return (id, title, createdAt, content, commentCount, isLiked)
             } ?? []
             completion(posts)
         }

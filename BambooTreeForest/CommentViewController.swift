@@ -6,7 +6,7 @@
 //
 
 import UIKit
-
+import FirebaseFirestore
 class CommentViewController: UIViewController {
     
     let db = Firestore.firestore() // Firestore 초기화
