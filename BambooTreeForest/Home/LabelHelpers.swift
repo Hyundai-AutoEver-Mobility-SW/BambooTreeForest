@@ -85,13 +85,17 @@ extension UIView {
         commentLabel.translatesAutoresizingMaskIntoConstraints = false
 
         // 하트 아이콘
-        let heartIcon = UIImageView()
-        heartIcon.image = UIImage(systemName: isLiked ? "heart.fill" : "heart")
-        heartIcon.tintColor = .white
-        heartIcon.translatesAutoresizingMaskIntoConstraints = false
+        let heartButton = UIButton()
+        let heartImage = UIImage(systemName: isLiked ? "heart.fill" : "heart")
+        heartButton.setImage(heartImage, for: .normal)
+        heartButton.tintColor = .white
+        heartButton.translatesAutoresizingMaskIntoConstraints = false
+        
+        // 하트 버튼 클릭 이벤트 추가
+        heartButton.addTarget(self, action: #selector(handleHeartButtonClick), for: .touchUpInside)
 
         button.addSubview(commentLabel)
-        button.addSubview(heartIcon)
+        button.addSubview(heartButton)
 
         NSLayoutConstraint.activate([
             // 댓글 라벨
@@ -99,18 +103,21 @@ extension UIView {
             commentLabel.leadingAnchor.constraint(equalTo: button.leadingAnchor, constant: 10),
 
             // 하트 아이콘
-            heartIcon.centerYAnchor.constraint(equalTo: button.centerYAnchor),
-            heartIcon.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -10)
+            heartButton.centerYAnchor.constraint(equalTo: button.centerYAnchor),
+            heartButton.trailingAnchor.constraint(equalTo: button.trailingAnchor, constant: -10),
+            heartButton.widthAnchor.constraint(equalToConstant: 24), // 아이콘 크기
+            heartButton.heightAnchor.constraint(equalToConstant: 24)
         ])
         // 버튼 클릭 이벤트 처리
         button.addTarget(self, action: #selector(handleButtonClick), for: .touchUpInside)
-
 
         return button
     }
     @objc private func handleButtonClick() {
         print("댓글 버튼이 클릭되었습니다!")
     }
-
+    @objc private func handleHeartButtonClick(_ sender: UIButton) {
+        print("하트 버튼이 클릭되었습니다!")
+    }
 }
 
