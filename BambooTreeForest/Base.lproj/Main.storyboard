@@ -53,10 +53,11 @@
                                                         </label>
                                                     </subviews>
                                                 </stackView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="soH-oU-gqW">
-                                                    <rect key="frame" x="36" y="113" width="321" height="360"/>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Content" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="soH-oU-gqW">
+                                                    <rect key="frame" x="36" y="173" width="321" height="300"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="height" constant="360" id="lcW-t5-Gfn"/>
+                                                        <constraint firstAttribute="width" constant="280" id="IF8-Vm-L87"/>
+                                                        <constraint firstAttribute="height" constant="300" id="L4B-qu-3Hi"/>
                                                     </constraints>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
@@ -75,10 +76,14 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstAttribute="trailingMargin" secondItem="soH-oU-gqW" secondAttribute="trailing" constant="16" id="10f-2c-naj"/>
+                                                <constraint firstItem="soH-oU-gqW" firstAttribute="leading" secondItem="c6n-50-YrW" secondAttribute="leadingMargin" constant="30" id="BcA-6l-QXj"/>
                                                 <constraint firstItem="soH-oU-gqW" firstAttribute="leading" secondItem="c6n-50-YrW" secondAttribute="leadingMargin" constant="16" id="Gyl-nD-lkj"/>
                                                 <constraint firstAttribute="trailingMargin" secondItem="soH-oU-gqW" secondAttribute="trailing" constant="16" id="KT2-an-5OR"/>
+                                                <constraint firstItem="soH-oU-gqW" firstAttribute="leading" secondItem="c6n-50-YrW" secondAttribute="leadingMargin" constant="30" id="NEH-Ko-k2D"/>
                                                 <constraint firstItem="soH-oU-gqW" firstAttribute="leading" secondItem="c6n-50-YrW" secondAttribute="leadingMargin" constant="16" id="PnM-Mg-3hu"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="soH-oU-gqW" secondAttribute="trailing" constant="30" id="ZU7-YG-K9h"/>
                                                 <constraint firstAttribute="bottomMargin" secondItem="soH-oU-gqW" secondAttribute="bottom" constant="16" id="pnP-Ib-07W"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="soH-oU-gqW" secondAttribute="trailing" constant="30" id="zK9-KA-bzC"/>
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
