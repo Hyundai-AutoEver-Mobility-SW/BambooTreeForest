@@ -28,6 +28,10 @@ class CommentViewController: UIViewController {
         }()
     
     let myView: UIView = CommentUIComponents.createMyView()
+    lazy var scrollView: UIScrollView = {
+        return CommentUIComponents.createScrollView(with: myView)
+    }()
+    
     let titleLabel: UILabel = CommentUIComponents.createTitleLabel()
     let dateLabel: UILabel = CommentUIComponents.createDateLabel()
     let underlineView: UIView = CommentUIComponents.createUnderlineView()
@@ -85,22 +89,34 @@ class CommentViewController: UIViewController {
             backgroundView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             backgroundView.trailingAnchor.constraint(equalTo: view.trailingAnchor)
         ])
-        view.addSubview(myView)
+        // 로고
+        view.addSubview(logoImageView)
+            NSLayoutConstraint.activate([
+                logoImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor), // 가운데 정렬
+                logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 20), // 상단 여백
+                logoImageView.widthAnchor.constraint(equalToConstant: 120),
+                logoImageView.heightAnchor.constraint(equalToConstant: 120)
+            ])
+        
+        // ScrollView 추가
+        view.addSubview(scrollView)
         NSLayoutConstraint.activate([
-            myView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 120),
-            myView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -30),
-            myView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 30),
-            myView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -30)
-        ])
-
-        myView.addSubview(logoImageView) // myView에 추가
-        NSLayoutConstraint.activate([
-            logoImageView.centerXAnchor.constraint(equalTo: myView.centerXAnchor),
-            logoImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 0),
-            logoImageView.widthAnchor.constraint(equalToConstant: 120),
-            logoImageView.heightAnchor.constraint(equalToConstant: 120)
+            scrollView.topAnchor.constraint(equalTo: logoImageView.bottomAnchor, constant: 10), // 로고 아래 위치
+            scrollView.centerXAnchor.constraint(equalTo: view.centerXAnchor), // 가운데 정렬
+            scrollView.widthAnchor.constraint(equalToConstant: 340), // 너비 제한
+            scrollView.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor, constant: -20) // 하단 여백
         ])
         
+        // MyView를 ScrollView에 추가
+        scrollView.addSubview(myView)
+        NSLayoutConstraint.activate([
+            myView.topAnchor.constraint(equalTo: scrollView.topAnchor, constant: 20),
+            myView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            myView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            myView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            myView.widthAnchor.constraint(equalTo: scrollView.widthAnchor) // ScrollView 폭에 맞춤
+        ])
+
         myView.addSubview(titleLabel)
         myView.addSubview(dateLabel)
         myView.addSubview(underlineView)
@@ -167,13 +183,15 @@ class CommentViewController: UIViewController {
 
         let nameLabel = UILabel()
         nameLabel.text = name
-        nameLabel.font = UIFont.boldSystemFont(ofSize: 14)
+        nameLabel.font = UIFont(name: "Kodchasan-Light", size: 14)
+        // nameLabel.font = UIFont.boldSystemFont(ofSize: 14)
         nameLabel.textColor = .black
         nameLabel.translatesAutoresizingMaskIntoConstraints = false
 
         let contentLabel = UILabel()
         contentLabel.text = content
-        contentLabel.font = UIFont.systemFont(ofSize: 14)
+        // contentLabel.font = UIFont.systemFont(ofSize: 14)
+        contentLabel.font = UIFont(name: "Kodchasan-Light", size: 14)
         contentLabel.textColor = .black
         contentLabel.numberOfLines = 0
         contentLabel.translatesAutoresizingMaskIntoConstraints = false

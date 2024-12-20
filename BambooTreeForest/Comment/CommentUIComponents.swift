@@ -17,9 +17,26 @@ class CommentUIComponents {
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }
+    static func createScrollView(with contentView: UIView) -> UIScrollView {
+        let scrollView = UIScrollView()
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(contentView)
+        
+        NSLayoutConstraint.activate([
+            contentView.topAnchor.constraint(equalTo: scrollView.topAnchor),
+            contentView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor),
+            contentView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor),
+            contentView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor),
+            contentView.widthAnchor.constraint(equalTo: scrollView.widthAnchor)
+        ])
+        
+        return scrollView
+    }
+    
     static func createTitleLabel() -> UILabel {
         let label = UILabel()
-        label.font = UIFont.boldSystemFont(ofSize: 24)
+        label.font = UIFont(name: "Kodchasan-Light", size: 20)
+        // label.font = UIFont.boldSystemFont(ofSize: 24)
         label.textColor = .white
         label.numberOfLines = 0
         label.translatesAutoresizingMaskIntoConstraints = false
@@ -28,7 +45,8 @@ class CommentUIComponents {
 
     static func createDateLabel() -> UILabel {
         let label = UILabel()
-        label.font = UIFont.systemFont(ofSize: 14)
+        label.font = UIFont(name: "Kodchasan-Light", size: 14)
+        // label.font = UIFont.systemFont(ofSize: 14)
         label.textColor = .lightGray
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
