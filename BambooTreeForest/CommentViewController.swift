@@ -37,6 +37,38 @@ class CommentViewController: UIViewController {
     let underlineView: UIView = CommentUIComponents.createUnderlineView()
     let commentsStackView: UIStackView = CommentUIComponents.createCommentsStackView()
     
+    // 댓글 입력
+    let commentInputContainer: UIView = {
+        let view = UIView()
+        view.translatesAutoresizingMaskIntoConstraints = false
+        view.backgroundColor = UIColor(hex: "#FFFFFF") // 적절한 배경색 설정
+        view.layer.borderWidth = 1
+        view.layer.borderColor = UIColor.lightGray.cgColor
+        return view
+    }()
+
+    let commentTextField: UITextField = {
+        let textField = UITextField()
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        textField.placeholder = "댓글을 입력하세요"
+        textField.font = UIFont(name: "Kodchasan-Light", size: 14)
+        textField.borderStyle = .none
+        return textField
+    }()
+
+    let postButton: UIButton = {
+        let button = UIButton(type: .system)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        button.setTitle("등록", for: .normal)
+        button.titleLabel?.font = UIFont(name: "Kodchasan-Bold", size: 14)
+        button.setTitleColor(.white, for: .normal)
+        button.backgroundColor = UIColor(hex: "#111C32") // 적절한 버튼 배경색 설정
+        button.layer.cornerRadius = 5
+        button.addTarget(self, action: #selector(handlePostComment), for: .touchUpInside)
+        return button
+    }()
+
+    
     // Data Properties
     var receivedId: String? // 전달받은 ID를 저장할 변수
     var postData: [String: Any]? // 가져온 데이터를 저장할 변수
@@ -145,6 +177,31 @@ class CommentViewController: UIViewController {
             commentsStackView.trailingAnchor.constraint(equalTo: myView.trailingAnchor, constant: -20),
             commentsStackView.bottomAnchor.constraint(lessThanOrEqualTo: myView.bottomAnchor, constant: -20)
         ])
+        // 댓글 입력 컨테이너 추가
+        view.addSubview(commentInputContainer)
+        NSLayoutConstraint.activate([
+            commentInputContainer.leadingAnchor.constraint(equalTo: view.leadingAnchor),
+            commentInputContainer.trailingAnchor.constraint(equalTo: view.trailingAnchor),
+            commentInputContainer.bottomAnchor.constraint(equalTo: view.safeAreaLayoutGuide.bottomAnchor),
+            commentInputContainer.heightAnchor.constraint(equalToConstant: 50)
+        ])
+        
+        commentInputContainer.addSubview(commentTextField)
+        commentInputContainer.addSubview(postButton)
+        
+        NSLayoutConstraint.activate([
+            // 댓글 입력 필드
+            commentTextField.leadingAnchor.constraint(equalTo: commentInputContainer.leadingAnchor, constant: 10),
+            commentTextField.centerYAnchor.constraint(equalTo: commentInputContainer.centerYAnchor),
+            commentTextField.trailingAnchor.constraint(equalTo: postButton.leadingAnchor, constant: -10),
+            commentTextField.heightAnchor.constraint(equalTo: commentInputContainer.heightAnchor, multiplier: 0.8),
+            
+            // 등록 버튼
+            postButton.trailingAnchor.constraint(equalTo: commentInputContainer.trailingAnchor, constant: -10),
+            postButton.centerYAnchor.constraint(equalTo: commentInputContainer.centerYAnchor),
+            postButton.widthAnchor.constraint(equalToConstant: 60),
+            postButton.heightAnchor.constraint(equalTo: commentInputContainer.heightAnchor, multiplier: 0.8)
+        ])
     }
     
     private func updateUI() {
@@ -218,4 +275,38 @@ class CommentViewController: UIViewController {
 
         return containerView
     }
+    @objc private func handlePostComment() {
+        guard let text = commentTextField.text, !text.isEmpty else {
+            print("❌ 댓글 입력란이 비어 있습니다.")
+            return
+        }
+        guard let postId = receivedId else {
+            print("❌ Post ID가 없습니다.")
+            return
+        }
+        
+        // Firestore에 저장할 댓글 데이터
+        let commentData: [String: Any] = [
+            "name": "익명", // 사용자 이름을 실제 값으로 대체
+            "comment": text
+        ]
+        
+        print("📝 댓글 데이터 생성: \(commentData)")
+        
+        // 댓글 추가
+        db.addComment(toPostId: postId, commentData: commentData) { [weak self] success in
+            guard let self = self else { return }
+            if success {
+                print("✅ Firestore에 댓글 저장 및 commentCount 증가 성공")
+                DispatchQueue.main.async {
+                    self.commentTextField.text = "" // 입력 필드 초기화
+                    self.fetchComments(forPostId: postId) // 댓글 새로고침
+                    print("🔄 댓글 목록 새로고침 완료")
+                }
+            } else {
+                print("❌ Firestore에 댓글 저장 실패")
+            }
+        }
+    }
+
 }

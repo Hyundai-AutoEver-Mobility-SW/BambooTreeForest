@@ -85,21 +85,32 @@ class FirestoreService {
                 completion(false)
             } else {
                 print("댓글 추가 성공: \(newCommentData)")
+                // 댓글 추가 성공 후 commentCount 증가
+                self.incrementCommentCount(forPostId: postId) { success in
+                    if success {
+                        print("✅ commentCount 증가 성공")
+                    } else {
+                        print("❌ commentCount 증가 실패")
+                    }
+                    completion(success)
+                }
+                completion(true)
+            }
+        }
+    }
+    func incrementCommentCount(forPostId postId: String, completion: @escaping (Bool) -> Void) {
+        let postRef = db.collection("posts").document(postId)
+        
+        postRef.updateData([
+            "commentCount": FieldValue.increment(Int64(1))
+        ]) { error in
+            if let error = error {
+                print("❌ commentCount 증가 실패: \(error)")
+                completion(false)
+            } else {
                 completion(true)
             }
         }
     }
     
-    /// 댓글 삭제 함수
-    func deleteComment(commentId: String, completion: @escaping (Bool) -> Void) {
-        db.collection("comments").document(commentId).delete { error in
-            if let error = error {
-                print("댓글 삭제 실패: \(error)")
-                completion(false)
-            } else {
-                print("댓글 삭제 성공: \(commentId)")
-                completion(true)
-            }
-        }
-    }
 }
