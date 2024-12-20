@@ -67,8 +67,9 @@ class ViewController: UIViewController {
                 postBox.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 30),
                 postBox.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor, constant: -30),
                 postBox.heightAnchor.constraint(equalToConstant: 500),
-                postBox.widthAnchor.constraint(equalToConstant: 280)
+                postBox.widthAnchor.constraint(equalTo: scrollView.widthAnchor, constant: -60) // 30 + 30
             ])
+
 
             if let previousBox = previousBox {
                 postBox.topAnchor.constraint(equalTo: previousBox.bottomAnchor, constant: boxMargin).isActive = true
