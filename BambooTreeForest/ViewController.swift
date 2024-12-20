@@ -26,22 +26,20 @@ class ViewController: UIViewController {
             }
         }
         if segue.identifier == "ShowCommentVC" {
-            if let commentVC = segue.destination as? CommentViewController {
-                // 선택된 문서 ID를 전달
-                commentVC.receivedId = selectedDocumentId
-                guard let id = selectedDocumentId else {
-                    print("문서 ID를 전달받지 못했습니다.")
-                    return
+//            if let commentVC = segue.destination as? CommentViewController {
+//                // 선택된 문서 ID를 전달
+//                commentVC.receivedId = selectedDocumentId
+//                guard let id = selectedDocumentId else {
+//                    print("문서 ID를 전달받지 못했습니다.")
+//                    return
+//                }
+//                commentVC.receivedId = id
+//            }
+            if segue.identifier == "ShowCommentVC", let commentVC = segue.destination as? CommentViewController, let postId = sender as? String {
+                    commentVC.receivedId = postId
                 }
-                commentVC.receivedId = id
-            }
         }
     }
-    
-    // 테이블뷰에 보여줄 데이터 배열
-    // var dataArray = ["첫번째 항목", "두번째 항목", "세째 항목"]
-
-    
     private let viewModel = MainViewModel()
     private let scrollView = UIScrollView()
 
@@ -147,11 +145,17 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource, CustomTabl
         let boxMargin: CGFloat = 20
         for (index, data) in viewModel.posts.enumerated() {
                 let postBox = PostBoxView(
+                    id: data.id,
+                    index: index,
                     title: data.title,
                     date: data.createdAt,
                     content: data.content,
                     commentCount: data.commentCount,
-                    isLiked: data.isLiked
+                    isLiked: data.isLiked,
+                    onCommentButtonTapped: { [weak self] in
+                        print("댓글 버튼 클릭 - 문서 ID: \(data.id)")
+                        self?.navigateToCommentPage(postId: data.id)
+                    }
                 )
                 scrollView.addSubview(postBox)
 
@@ -175,5 +179,9 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource, CustomTabl
                 postBox.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor, constant: -20).isActive = true
             }
         }
+    }
+    private func navigateToCommentPage(postId: String) {
+        // 댓글 페이지로 이동하는 로직 구현
+        performSegue(withIdentifier: "ShowCommentVC", sender: postId)
     }
 }

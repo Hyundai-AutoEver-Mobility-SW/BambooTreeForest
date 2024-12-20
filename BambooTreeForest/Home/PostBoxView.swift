@@ -9,40 +9,41 @@ import UIKit
 
 class PostBoxView: UIView {
     // MARK: - Properties
-    private var postId: Int? // 게시글 식별자
-    var onCommentButtonTapped: ((Int) -> Void)? // 댓글 버튼 클릭 이벤트 처리 클로저
+    private var postId: String? // 게시글 식별자
+    var onCommentButtonTapped: ((String) -> Void)? // 댓글 버튼 클릭 이벤트 처리 클로저
 
     // MARK: - Initializer
-    init(title: String, date: String, content: String, commentCount: Int, isLiked: Bool) {
+    init(id: String, index:Int,  title: String, date: String, content: String, commentCount: Int, isLiked: Bool, onCommentButtonTapped: @escaping () -> Void) {
         super.init(frame: .zero)
-        setupView()
-        configureContent(title: title, date: date, content: content, commentCount: commentCount, isLiked: isLiked)
+        self.postId = id
+        setupView(index : index)
+        configureContent(id: id, index: index, title: title, date: date, content: content, commentCount: commentCount, isLiked: isLiked, onCommentButtonTapped: onCommentButtonTapped)
         }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
-        setupView()
     }
 
     // MARK: - Setup View
-    private func setupView() {
+    private func setupView(index: Int) {
         backgroundColor = .clear // 배경색 제거
         layer.cornerRadius = 30 // 모서리 둥글게
         layer.borderWidth = 1 // 테두리 두께
         layer.borderColor = UIColor.white.cgColor // 테두리 색상
 
         // 배경 이미지 설정
-        if let backgroundImage = UIImage(named: "redBox") {
-            layer.contents = backgroundImage.cgImage // CALayer에 이미지 설정
-            layer.contentsGravity = .resizeAspectFill // 이미지 크기 비율 유지
-            layer.masksToBounds = true // 경계를 넘는 이미지 잘라내기
-        }
+        let backgroundImageName = index % 2 == 0 ? "redBox" : "greenBox" // 짝수: redBox, 홀수: greenBox
+            if let backgroundImage = UIImage(named: backgroundImageName) {
+                layer.contents = backgroundImage.cgImage // CALayer에 이미지 설정
+                layer.contentsGravity = .resizeAspectFill // 이미지 크기 비율 유지
+                layer.masksToBounds = true // 경계를 넘는 이미지 잘라내기
+            }
 
         translatesAutoresizingMaskIntoConstraints = false
     }
 
     // MARK: - Configure Content
-    private func configureContent(title: String, date: String, content: String, commentCount: Int, isLiked: Bool) {
+    private func configureContent(id: String, index:Int, title: String, date: String, content: String, commentCount: Int, isLiked: Bool, onCommentButtonTapped: @escaping () -> Void) {
         let contentContainer = UIView()
         contentContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(contentContainer)
@@ -58,9 +59,11 @@ class PostBoxView: UIView {
         let titleLabel = createTitleLabel(text: title)
         let dateLabel = createDateLabel(text: date)
         let contentLabel = createContentLabel(text: content)
-        let actionButton = createActionButton(commentCount: commentCount, isLiked: isLiked) // 버튼 생성
         
-        // 댓글 버튼 클릭 이벤트 설정
+        // 댓글 페이지 이동 버튼 생성
+        let actionButton = createActionButton(commentCount: commentCount, isLiked: isLiked, onCommentButtonTapped: onCommentButtonTapped)
+        
+        // todo 댓글 버튼 클릭 이벤트 설정
         // actionButton.addTarget(self, action: #selector(handleCommentButtonClick), for: .touchUpInside)
         
         // 구분선 추가

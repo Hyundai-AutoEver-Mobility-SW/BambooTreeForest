@@ -71,7 +71,7 @@ extension UIView {
         
         return label
     }
-    func createActionButton(commentCount: Int, isLiked: Bool) -> UIView {
+    func createActionButton(commentCount: Int, isLiked: Bool, onCommentButtonTapped: @escaping () -> Void) -> UIView {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.backgroundColor = UIColor(red: 0.067, green: 0.11, blue: 0.196, alpha: 1).cgColor
@@ -91,12 +91,19 @@ extension UIView {
         heartButton.tintColor = .white
         heartButton.translatesAutoresizingMaskIntoConstraints = false
         
-        // 하트 버튼 클릭 이벤트 추가
-        heartButton.addTarget(self, action: #selector(handleHeartButtonClick), for: .touchUpInside)
-
+        // todo 하트 버튼 클릭 이벤트 추가
+        // heartButton.addTarget(self, action: #selector(handleHeartButtonClick), for: .touchUpInside)
+        
+        // 댓글 버튼 클릭 이벤트 추가
+        button.addAction(UIAction(handler: { _ in
+            onCommentButtonTapped() // 뷰 컨트롤러에서 처리하도록 클로저 호출
+        }), for: .touchUpInside)
+        
+        // 댓글과 하트 추가
         button.addSubview(commentLabel)
         button.addSubview(heartButton)
-
+        
+    
         NSLayoutConstraint.activate([
             // 댓글 라벨
             commentLabel.centerYAnchor.constraint(equalTo: button.centerYAnchor),
