@@ -71,7 +71,7 @@ extension UIView {
         
         return label
     }
-    func createActionButton(commentCount: Int, isLiked: Bool, onCommentButtonTapped: @escaping () -> Void) -> UIView {
+    func createActionButton(commentCount: Int, isLiked: Bool, onCommentButtonTapped: @escaping () -> Void, onHeartButtonClicked: @escaping (Bool) -> Void) -> UIView {
         let button = UIButton()
         button.translatesAutoresizingMaskIntoConstraints = false
         button.layer.backgroundColor = UIColor(red: 0.067, green: 0.11, blue: 0.196, alpha: 1).cgColor
@@ -91,8 +91,13 @@ extension UIView {
         heartButton.tintColor = .white
         heartButton.translatesAutoresizingMaskIntoConstraints = false
         
-        // todo 하트 버튼 클릭 이벤트 추가
-        // heartButton.addTarget(self, action: #selector(handleHeartButtonClick), for: .touchUpInside)
+        // 하트 버튼 클릭 이벤트
+        var currentLikedState = isLiked // 현재 상태를 로컬에서 관리
+        heartButton.addAction(UIAction(handler: { _ in
+            currentLikedState.toggle() // 상태 반전
+            heartButton.setImage(UIImage(systemName: currentLikedState ? "heart.fill" : "heart"), for: .normal) // UI 업데이트
+            onHeartButtonClicked(currentLikedState) // 새로운 상태 전달
+        }), for: .touchUpInside)
         
         // 댓글 버튼 클릭 이벤트 추가
         button.addAction(UIAction(handler: { _ in
@@ -103,7 +108,7 @@ extension UIView {
         button.addSubview(commentLabel)
         button.addSubview(heartButton)
         
-    
+
         NSLayoutConstraint.activate([
             // 댓글 라벨
             commentLabel.centerYAnchor.constraint(equalTo: button.centerYAnchor),
@@ -115,16 +120,7 @@ extension UIView {
             heartButton.widthAnchor.constraint(equalToConstant: 24), // 아이콘 크기
             heartButton.heightAnchor.constraint(equalToConstant: 24)
         ])
-        // 버튼 클릭 이벤트 처리
-        button.addTarget(self, action: #selector(handleButtonClick), for: .touchUpInside)
-
         return button
-    }
-    @objc private func handleButtonClick() {
-        print("댓글 버튼이 클릭되었습니다!")
-    }
-    @objc private func handleHeartButtonClick(_ sender: UIButton) {
-        print("하트 버튼이 클릭되었습니다!")
     }
 }
 

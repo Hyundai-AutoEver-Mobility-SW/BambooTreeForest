@@ -155,7 +155,11 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource, CustomTabl
                     onCommentButtonTapped: { [weak self] in
                         print("댓글 버튼 클릭 - 문서 ID: \(data.id)")
                         self?.navigateToCommentPage(postId: data.id)
+                    },
+                    onHeartButtonClicked: { [weak self] newLikedState in
+                        self?.updateFirestoreLikedStatus(postId: data.id, newLikedState: newLikedState)
                     }
+                    
                 )
                 scrollView.addSubview(postBox)
 
@@ -183,5 +187,16 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource, CustomTabl
     private func navigateToCommentPage(postId: String) {
         // 댓글 페이지로 이동하는 로직 구현
         performSegue(withIdentifier: "ShowCommentVC", sender: postId)
+    }
+    private func updateFirestoreLikedStatus(postId: String, newLikedState: Bool) {
+        Firestore.firestore().collection("posts").document(postId).updateData([
+            "isLiked": newLikedState
+        ]) { error in
+            if let error = error {
+                print("하트 상태 업데이트 실패: \(error)")
+            } else {
+                print("하트 상태 업데이트 성공: \(newLikedState)")
+            }
+        }
     }
 }

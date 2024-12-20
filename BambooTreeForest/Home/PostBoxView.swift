@@ -13,11 +13,11 @@ class PostBoxView: UIView {
     var onCommentButtonTapped: ((String) -> Void)? // 댓글 버튼 클릭 이벤트 처리 클로저
 
     // MARK: - Initializer
-    init(id: String, index:Int,  title: String, date: String, content: String, commentCount: Int, isLiked: Bool, onCommentButtonTapped: @escaping () -> Void) {
+    init(id: String, index:Int,  title: String, date: String, content: String, commentCount: Int, isLiked: Bool, onCommentButtonTapped: @escaping () -> Void, onHeartButtonClicked: @escaping (Bool) -> Void) {
         super.init(frame: .zero)
         self.postId = id
         setupView(index : index)
-        configureContent(id: id, index: index, title: title, date: date, content: content, commentCount: commentCount, isLiked: isLiked, onCommentButtonTapped: onCommentButtonTapped)
+        configureContent(id: id, index: index, title: title, date: date, content: content, commentCount: commentCount, isLiked: isLiked, onCommentButtonTapped: onCommentButtonTapped, onHeartButtonClicked: onHeartButtonClicked)
         }
 
     required init?(coder: NSCoder) {
@@ -43,7 +43,8 @@ class PostBoxView: UIView {
     }
 
     // MARK: - Configure Content
-    private func configureContent(id: String, index:Int, title: String, date: String, content: String, commentCount: Int, isLiked: Bool, onCommentButtonTapped: @escaping () -> Void) {
+    private func configureContent(id: String, index:Int, title: String, date: String, content: String, commentCount: Int, isLiked: Bool, onCommentButtonTapped: @escaping () -> Void,
+                                  onHeartButtonClicked: @escaping (Bool) -> Void) {
         let contentContainer = UIView()
         contentContainer.translatesAutoresizingMaskIntoConstraints = false
         addSubview(contentContainer)
@@ -61,10 +62,7 @@ class PostBoxView: UIView {
         let contentLabel = createContentLabel(text: content)
         
         // 댓글 페이지 이동 버튼 생성
-        let actionButton = createActionButton(commentCount: commentCount, isLiked: isLiked, onCommentButtonTapped: onCommentButtonTapped)
-        
-        // todo 댓글 버튼 클릭 이벤트 설정
-        // actionButton.addTarget(self, action: #selector(handleCommentButtonClick), for: .touchUpInside)
+        let actionButton = createActionButton(commentCount: commentCount, isLiked: isLiked, onCommentButtonTapped: onCommentButtonTapped, onHeartButtonClicked: onHeartButtonClicked)
         
         // 구분선 추가
         let separatorView = UIView()
@@ -107,11 +105,5 @@ class PostBoxView: UIView {
             actionButton.bottomAnchor.constraint(equalTo: contentContainer.bottomAnchor, constant: 0),
             actionButton.heightAnchor.constraint(equalToConstant: 43),
         ])
-    }
-        
-    // MARK: - Actions
-    @objc private func handleCommentButtonClick() {
-        guard let postId = postId else { return }
-        onCommentButtonTapped?(postId) // 클릭 이벤트 전달
     }
 }
