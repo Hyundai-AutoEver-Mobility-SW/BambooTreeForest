@@ -38,7 +38,6 @@ class FirestoreService {
             completion(posts)
         }
     }
-    
     // id 필드 추가 메서드
     private func addIdFieldToDocument(docId: String) {
         db.collection("posts").document(docId).updateData(["id": docId]) { error in
@@ -46,6 +45,60 @@ class FirestoreService {
                 print("Firestore 문서 ID 추가 실패: \(error)")
             } else {
                 print("Firestore 문서 ID 추가 성공: \(docId)")
+            }
+        }
+    }
+// MARK: - Comments
+    func fetchPost(withId id: String, completion: @escaping ([String: Any]?) -> Void) {
+        db.collection("posts").document(id).getDocument { document, error in
+            if let error = error {
+                print("포스트 가져오기 실패: \(error)")
+                completion(nil)
+                return
+            }
+            completion(document?.data())
+        }
+    }
+    /// 특정 포스트에 해당하는 댓글 데이터를 가져오는 함수
+    func fetchComments(forPostId postId: String, completion: @escaping ([[String: Any]]) -> Void) {
+        db.collection("comments").whereField("postId", isEqualTo: postId).getDocuments { snapshot, error in
+            if let error = error {
+                print("댓글 데이터 가져오기 실패: \(error)")
+                completion([])
+                return
+            }
+            
+            let comments = snapshot?.documents.map { $0.data() } ?? []
+            print("가져온 댓글 개수: \(comments.count)")
+            completion(comments)
+        }
+    }
+    
+    /// 댓글 추가 함수
+    func addComment(toPostId postId: String, commentData: [String: Any], completion: @escaping (Bool) -> Void) {
+        var newCommentData = commentData
+        newCommentData["postId"] = postId // postId를 추가
+        
+        db.collection("comments").addDocument(data: newCommentData) { error in
+            if let error = error {
+                print("댓글 추가 실패: \(error)")
+                completion(false)
+            } else {
+                print("댓글 추가 성공: \(newCommentData)")
+                completion(true)
+            }
+        }
+    }
+    
+    /// 댓글 삭제 함수
+    func deleteComment(commentId: String, completion: @escaping (Bool) -> Void) {
+        db.collection("comments").document(commentId).delete { error in
+            if let error = error {
+                print("댓글 삭제 실패: \(error)")
+                completion(false)
+            } else {
+                print("댓글 삭제 성공: \(commentId)")
+                completion(true)
             }
         }
     }
