@@ -110,9 +110,8 @@ class ViewController: UIViewController {
             }
         }
     }
-        
 }
-
+// 정환이 페이지 이동 관련 코드들
 // 테이블뷰 관련 메서드들
 extension ViewController: UITableViewDelegate, UITableViewDataSource, CustomTableViewCellDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -129,6 +128,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource, CustomTabl
         return cell
     }
     
+    
+    // 정환이 페이지 이동 관련 코드들
     func didTapButton(in cell: CustomTableViewCell) {
         // 버튼이 눌린 셀의 indexPath 가져오기
         guard let indexPath = tableView.indexPath(for: cell) else { return }
