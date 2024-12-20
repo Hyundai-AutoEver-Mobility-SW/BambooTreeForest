@@ -69,7 +69,8 @@
                                                     <state key="normal" title="Button"/>
                                                     <buttonConfiguration key="configuration" style="plain" title="Button"/>
                                                     <connections>
-                                                        <segue destination="4vd-1K-RM7" kind="show" id="917-4W-DHv"/>
+                                                        <action selector="buttonTapped:" destination="zpw-Qb-bJo" eventType="touchUpInside" id="K20-QL-L8w"/>
+                                                        <segue destination="4vd-1K-RM7" kind="show" identifier="ShowCommentVC" id="O6K-TA-eho"/>
                                                     </connections>
                                                 </button>
                                             </subviews>
@@ -86,6 +87,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="button" destination="SN3-68-dmh" id="UL3-6H-s9t"/>
                                             <outlet property="dateLabel" destination="mn6-EK-g1u" id="Ohv-KG-3n2"/>
                                             <outlet property="descLabel" destination="soH-oU-gqW" id="5gN-fA-lja"/>
                                             <outlet property="titleLabel" destination="8ay-W3-OLd" id="L9E-Ox-Ssq"/>
@@ -167,7 +169,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oXU-cS-YkX" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1055.7251908396945" y="757.74647887323943"/>
+            <point key="canvasLocation" x="1077" y="809"/>
         </scene>
     </scenes>
     <resources>
