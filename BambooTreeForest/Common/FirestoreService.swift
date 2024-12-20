@@ -17,25 +17,24 @@ class FirestoreService {
                 completion([])
                 return
             }
+            // 실제 Firestore에서 가져온 문서 개수 출력
+            let documentCount = snapshot?.documents.count ?? 0
+            print("총 문서 개수: \(documentCount)")
             
             let posts = snapshot?.documents.compactMap { doc -> (String, String, String, String, Int, Bool)? in
-                let id = doc.documentID // 문서 ID
+                let id = doc.data()["id"] as? String ?? doc.documentID // id 필드가 없으면 문서 ID 사용
                 let data = doc.data()
-                // 문서에 id 필드가 없는 경우 추가
-                if data["id"] == nil {
-                    self.addIdFieldToDocument(docId: id)
-                }
-                
-                guard
-                    let title = data["title"] as? String,
-                    let createdAt = data["createdAt"] as? String,
-                    let content = data["content"] as? String,
-                    let commentCount = data["commentCount"] as? Int,
-                    let isLiked = data["isLiked"] as? Bool
-                else { return nil }
+
+                // 필드 기본값 설정
+                let title = data["title"] as? String ?? "제목 없음"
+                let createdAt = data["createdAt"] as? String ?? "날짜 없음"
+                let content = data["content"] as? String ?? "내용 없음"
+                let commentCount = data["commentCount"] as? Int ?? 0
+                let isLiked = data["isLiked"] as? Bool ?? false
                 
                 return (id, title, createdAt, content, commentCount, isLiked)
             } ?? []
+            print("유효한 문서 개수: \(posts.count)")
             completion(posts)
         }
     }
