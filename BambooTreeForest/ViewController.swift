@@ -89,14 +89,14 @@ class ViewController: UIViewController {
                 self?.setupBoxes()
             }
         }
-    // Firestore에서 데이터를 가져오는 함수
+        // Firestore에서 데이터를 가져오는 함수
         func fetchDataFromFirestore() {
             db.collection("posts").getDocuments { (snapshot, error) in
                 if let error = error {
                     print("Firestore 데이터 가져오기 실패: \(error)")
                     return
                 }
-                 
+                
                 guard let documents = snapshot?.documents else { return }
                 
                 // Firestore 문서 데이터를 배열에 저장 (추가된 부분)
@@ -109,8 +109,9 @@ class ViewController: UIViewController {
                 }
             }
         }
+    }
 }
-
+// 정환이 페이지 이동 관련 코드들
 // 테이블뷰 관련 메서드들
 extension ViewController: UITableViewDelegate, UITableViewDataSource, CustomTableViewCellDelegate {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
@@ -127,6 +128,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource, CustomTabl
         return cell
     }
     
+    
+    // 정환이 페이지 이동 관련 코드들
     func didTapButton(in cell: CustomTableViewCell) {
         // 버튼이 눌린 셀의 indexPath 가져오기
         guard let indexPath = tableView.indexPath(for: cell) else { return }
