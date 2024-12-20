@@ -9,11 +9,11 @@ import UIKit
 
 class PostBoxView: UIView {
     // MARK: - Initializer
-    init(title: String, description: String) {
+    init(title: String, date: String, content: String, commentCount: Int, isLiked: Bool) {
         super.init(frame: .zero)
         setupView()
-        configureContent(title: title, description: description)
-    }
+        configureContent(title: title, date: date, content: content, commentCount: commentCount, isLiked: isLiked)
+        }
 
     required init?(coder: NSCoder) {
         super.init(coder: coder)
@@ -38,34 +38,56 @@ class PostBoxView: UIView {
     }
 
     // MARK: - Configure Content
-    private func configureContent(title: String, description: String) {
-        let titleLabel = UILabel()
-        titleLabel.text = title
-        titleLabel.font = UIFont.boldSystemFont(ofSize: 18)
-        titleLabel.textColor = .black
-        titleLabel.translatesAutoresizingMaskIntoConstraints = false
+    private func configureContent(title: String, date: String, content: String, commentCount: Int, isLiked: Bool) {
+            let contentContainer = UIView()
+            contentContainer.translatesAutoresizingMaskIntoConstraints = false
+            addSubview(contentContainer)
 
-        let descriptionLabel = UILabel()
-        descriptionLabel.text = description
-        descriptionLabel.font = UIFont.systemFont(ofSize: 14)
-        descriptionLabel.textColor = .darkGray
-        descriptionLabel.numberOfLines = 0
-        descriptionLabel.translatesAutoresizingMaskIntoConstraints = false
+            NSLayoutConstraint.activate([
+                contentContainer.topAnchor.constraint(equalTo: topAnchor, constant: 30),
+                contentContainer.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 30),
+                contentContainer.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -30),
+                contentContainer.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -30)
+            ])
 
-        addSubview(titleLabel)
-        addSubview(descriptionLabel)
+            // Create labels using helper methods from LabelHelpers.swift
+            let titleLabel = createTitleLabel(text: title)
+            let dateLabel = createDateLabel(text: date)
+            let contentLabel = createContentLabel(text: content)
+        
+            // 구분선 추가
+            let separatorView = UIView()
+            separatorView.translatesAutoresizingMaskIntoConstraints = false
+            separatorView.backgroundColor = UIColor(red: 0.067, green: 0.11, blue: 0.196, alpha: 0.8)
+            separatorView.heightAnchor.constraint(equalToConstant: 1).isActive = true // 구분선 높이 1pt
 
-        // Add Constraints
-        NSLayoutConstraint.activate([
-            titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 10),
-            titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            titleLabel.heightAnchor.constraint(equalToConstant: 20),
+            contentContainer.addSubview(titleLabel)
+            contentContainer.addSubview(dateLabel)
+            contentContainer.addSubview(separatorView)
+            contentContainer.addSubview(contentLabel)
 
-            descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 5),
-            descriptionLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 10),
-            descriptionLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -10),
-            descriptionLabel.bottomAnchor.constraint(equalTo: bottomAnchor, constant: -10)
-        ])
+            NSLayoutConstraint.activate([
+                // Title Label
+                titleLabel.topAnchor.constraint(equalTo: contentContainer.topAnchor),
+                titleLabel.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
+                titleLabel.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
+                titleLabel.heightAnchor.constraint(equalToConstant: 60),
+
+                // Date Label
+                dateLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 15),
+                dateLabel.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
+                
+                // Separator View (구분선)
+                separatorView.topAnchor.constraint(equalTo: dateLabel.bottomAnchor, constant: 10),
+                separatorView.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
+                separatorView.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
+                separatorView.heightAnchor.constraint(equalToConstant: 1), // 구분선 높이
+
+                // Content Label
+                contentLabel.topAnchor.constraint(equalTo: separatorView.bottomAnchor, constant: 10),
+                contentLabel.leadingAnchor.constraint(equalTo: contentContainer.leadingAnchor),
+                contentLabel.trailingAnchor.constraint(equalTo: contentContainer.trailingAnchor),
+                contentLabel.bottomAnchor.constraint(lessThanOrEqualTo: contentContainer.bottomAnchor)
+            ])
+        }
     }
-}

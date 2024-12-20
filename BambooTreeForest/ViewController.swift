@@ -58,10 +58,15 @@ class ViewController: UIViewController {
     private func setupBoxes() {
         var previousBox: UIView? = nil
         let boxMargin: CGFloat = 20
-
         for (index, data) in viewModel.posts.enumerated() {
-            let postBox = PostBoxView(title: data.title, description: data.content)
-            scrollView.addSubview(postBox)
+                let postBox = PostBoxView(
+                    title: data.title,
+                    date: data.createdAt,
+                    content: data.content,
+                    commentCount: data.commentCount,
+                    isLiked: data.isLiked
+                )
+                scrollView.addSubview(postBox)
 
             NSLayoutConstraint.activate([
                 postBox.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor, constant: 30),
