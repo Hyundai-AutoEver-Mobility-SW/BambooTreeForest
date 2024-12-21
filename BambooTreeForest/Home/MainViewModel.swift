@@ -9,7 +9,7 @@ import Foundation
 
 class MainViewModel {
     private let firestoreService = FirestoreService()
-    var posts: [(title: String, createdAt: String, content: String, commentCount: Int, isLiked: Bool)] = []
+    var posts: [(id:String, title: String, createdAt: String, content: String, commentCount: Int, isLiked: Bool)] = []
 
     func fetchPosts(completion: @escaping () -> Void) {
         firestoreService.fetchPosts { [weak self] fetchedPosts in
