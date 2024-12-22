@@ -11,7 +11,9 @@ class FirestoreService {
     private let db = Firestore.firestore()
     
     func fetchPosts(completion: @escaping ([(id: String, title: String, createdAt: String, content: String, commentCount: Int, isLiked: Bool)]) -> Void) {
-        db.collection("posts").getDocuments { snapshot, error in
+        db.collection("posts")
+            .order(by: "createdAt", descending: true)
+            .getDocuments { snapshot, error in
             if let error = error {
                 print("Firestore 데이터 가져오기 실패: \(error)")
                 completion([])
@@ -61,7 +63,8 @@ class FirestoreService {
     }
     /// 특정 포스트에 해당하는 댓글 데이터를 가져오는 함수
     func fetchComments(forPostId postId: String, completion: @escaping ([[String: Any]]) -> Void) {
-        db.collection("comments").whereField("postId", isEqualTo: postId).getDocuments { snapshot, error in
+        db.collection("comments").whereField("postId", isEqualTo: postId)
+            .getDocuments { snapshot, error in
             if let error = error {
                 print("댓글 데이터 가져오기 실패: \(error)")
                 completion([])
