@@ -67,6 +67,8 @@ class CommentViewController: UIViewController {
         button.addTarget(self, action: #selector(handlePostComment), for: .touchUpInside)
         return button
     }()
+    
+    
 
     
     // Data Properties
@@ -107,11 +109,18 @@ class CommentViewController: UIViewController {
         db.fetchComments(forPostId: postId) { [weak self] comments in
             guard let self = self else { return }
             DispatchQueue.main.async {
-                self.comments = comments
+                // Firestore에서 가져온 commentId를 그대로 사용
+                self.comments = comments.map { comment in
+                    var updatedComment = comment
+                    updatedComment["commentId"] = comment["commentId"] // Firestore에서 가져온 commentId 그대로 사용
+                    return updatedComment
+                }
                 self.updateCommentsUI()
             }
         }
     }
+
+
     
     private func setupUI() {
         view.addSubview(backgroundView)
@@ -222,14 +231,19 @@ class CommentViewController: UIViewController {
             commentsStackView.addArrangedSubview(emptyLabel)
         } else {
             for comment in comments {
-                guard let name = comment["name"] as? String, let content = comment["comment"] as? String else { continue }
-                let commentView = createCommentView(name: name, content: content)
+                guard let name = comment["name"] as? String,
+                      let content = comment["comment"] as? String,
+                      let commentId = comment["commentId"] as? String else {
+                    print("❌ 댓글 데이터 구조가 올바르지 않습니다: \(comment)")
+                    continue
+                }
+                let commentView = createCommentView(name: name, content: content, commentId: commentId)
                 commentsStackView.addArrangedSubview(commentView)
             }
         }
     }
     
-    private func createCommentView(name: String, content: String) -> UIView {
+    private func createCommentView(name: String, content: String, commentId: String) -> UIView {
         let containerView = UIView()
         containerView.translatesAutoresizingMaskIntoConstraints = false
 
@@ -252,9 +266,18 @@ class CommentViewController: UIViewController {
         contentLabel.textColor = .black
         contentLabel.numberOfLines = 0
         contentLabel.translatesAutoresizingMaskIntoConstraints = false
+        
+        // 삭제버튼 추가
+        let deleteButton = CommentUIComponents.createDeleteButton(
+                target: self,
+                action: #selector(deleteCommentTapped(_:))
+        )
+        deleteButton.accessibilityIdentifier = commentId // 삭제 버튼에 commentId 저장
 
+        
         bubbleView.addSubview(nameLabel)
         bubbleView.addSubview(contentLabel)
+        bubbleView.addSubview(deleteButton)
         containerView.addSubview(bubbleView)
 
         NSLayoutConstraint.activate([
@@ -267,6 +290,13 @@ class CommentViewController: UIViewController {
             nameLabel.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: 10),
             nameLabel.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -10),
 
+            // DeleteButton constraints
+            deleteButton.topAnchor.constraint(equalTo: bubbleView.topAnchor, constant: 10),
+            deleteButton.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -10), // 우측 상단에 배치
+            deleteButton.widthAnchor.constraint(equalToConstant: 20),
+            deleteButton.heightAnchor.constraint(equalToConstant: 20),
+
+            // ContentLabel constraints
             contentLabel.topAnchor.constraint(equalTo: nameLabel.bottomAnchor, constant: 5),
             contentLabel.leadingAnchor.constraint(equalTo: bubbleView.leadingAnchor, constant: 10),
             contentLabel.trailingAnchor.constraint(equalTo: bubbleView.trailingAnchor, constant: -10),
@@ -287,7 +317,7 @@ class CommentViewController: UIViewController {
         
         // Firestore에 저장할 댓글 데이터
         let commentData: [String: Any] = [
-            "name": "익명", // 사용자 이름을 실제 값으로 대체
+            "name": "대나무", // 사용자 이름을 실제 값으로 대체
             "comment": text
         ]
         
@@ -308,5 +338,30 @@ class CommentViewController: UIViewController {
             }
         }
     }
+    @objc private func deleteCommentTapped(_ sender: UIButton) {
+        guard let postId = receivedId else {
+            print("❌ Post ID가 없습니다.")
+            return
+        }
+        
+        guard let commentId = sender.accessibilityIdentifier else {
+            print("❌ 댓글 ID를 가져올 수 없습니다.")
+            return
+        }
+        // print("🔍 삭제 요청된 ID: \(commentId)")
+            
+        db.deleteComment(postId: postId, commentId: commentId) { [weak self] success in
+            guard let self = self else { return }
+            if success {
+                print("✅ 댓글 삭제 성공")
+                DispatchQueue.main.async {
+                    self.fetchComments(forPostId: postId) // 댓글 목록 새로고침
+                }
+            } else {
+                print("❌ 댓글 삭제 실패")
+            }
+        }
+    }
+
 
 }

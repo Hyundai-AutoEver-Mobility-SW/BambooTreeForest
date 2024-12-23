@@ -66,4 +66,12 @@ class CommentUIComponents {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }
+    static func createDeleteButton(target: Any?, action: Selector) -> UIButton {
+            let button = UIButton(type: .system)
+            button.setImage(UIImage(systemName: "xmark.circle"), for: .normal)
+            button.tintColor = .black
+            button.translatesAutoresizingMaskIntoConstraints = false
+            button.addTarget(target, action: action, for: .touchUpInside)
+            return button
+        }
 }

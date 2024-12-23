@@ -71,23 +71,31 @@ class FirestoreService {
                 return
             }
             
-            let comments = snapshot?.documents.map { $0.data() } ?? []
+            // 댓글 데이터 매핑
+            let comments = snapshot?.documents.map { doc -> [String: Any] in
+                var data = doc.data()
+                // commentId 필드가 없으면 Firestore 문서 ID로 설정
+                data["commentId"] = data["commentId"] ?? "댓글id없다"
+                return data
+            } ?? []
+    
             print("가져온 댓글 개수: \(comments.count)")
             completion(comments)
         }
     }
     
-    /// 댓글 추가 함수
+    /// 댓글  추가  함수
     func addComment(toPostId postId: String, commentData: [String: Any], completion: @escaping (Bool) -> Void) {
         var newCommentData = commentData
-        newCommentData["postId"] = postId // postId를 추가
+        newCommentData["postId"] = postId // postId 추가
+        newCommentData["commentId"] = UUID().uuidString // UUID로 commentId 생성 및 추가
         
         db.collection("comments").addDocument(data: newCommentData) { error in
             if let error = error {
-                print("댓글 추가 실패: \(error)")
+                print("❌ 댓글 추가 실패: \(error)")
                 completion(false)
             } else {
-                print("댓글 추가 성공: \(newCommentData)")
+                print("✅ 댓글 추가 성공: \(newCommentData)")
                 // 댓글 추가 성공 후 commentCount 증가
                 self.incrementCommentCount(forPostId: postId) { success in
                     if success {
@@ -97,10 +105,10 @@ class FirestoreService {
                     }
                     completion(success)
                 }
-                completion(true)
             }
         }
     }
+
     func incrementCommentCount(forPostId postId: String, completion: @escaping (Bool) -> Void) {
         let postRef = db.collection("posts").document(postId)
         
@@ -115,5 +123,56 @@ class FirestoreService {
             }
         }
     }
+    
+    func deleteComment(postId: String, commentId: String, completion: @escaping (Bool) -> Void) {
+        let commentsCollection = Firestore.firestore().collection("comments")
+        let postsCollection = Firestore.firestore().collection("posts")
+        
+        print("🔍 삭제 요청된 postId: \(postId), commentId: \(commentId)")
+        
+        // postId와 commentId로 문서 찾기
+        commentsCollection
+            .whereField("postId", isEqualTo: postId)
+            .whereField("commentId", isEqualTo: commentId)
+            .getDocuments { snapshot, error in
+                if let error = error {
+                    print("❌ 댓글 찾기 실패: \(error.localizedDescription)")
+                    completion(false)
+                    return
+                }
+                
+                guard let documents = snapshot?.documents, !documents.isEmpty else {
+                    print("❌ 해당 postId와 commentId를 가진 댓글을 찾을 수 없습니다.")
+                    completion(false)
+                    return
+                }
+                
+                // 첫 번째 문서를 삭제
+                let document = documents.first
+                document?.reference.delete { error in
+                    if let error = error {
+                        print("❌ 댓글 삭제 실패: \(error.localizedDescription)")
+                        completion(false)
+                    } else {
+                        print("✅ 댓글 삭제 성공")
+                        // commentCount 감소
+                        postsCollection.document(postId).updateData([
+                            "commentCount": FieldValue.increment(Int64(-1)) // commentCount를 1 감소
+                        ]) { error in
+                            if let error = error {
+                                print("❌ commentCount 감소 실패: \(error.localizedDescription)")
+                            } else {
+                                print("✅ commentCount 감소 성공")
+                            }
+                        }
+                        
+                        completion(true)
+                        completion(true)
+                    }
+                }
+            }
+    }
+
+
     
 }
