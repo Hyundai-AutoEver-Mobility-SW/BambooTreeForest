@@ -64,6 +64,7 @@ class FirestoreService {
     /// 특정 포스트에 해당하는 댓글 데이터를 가져오는 함수
     func fetchComments(forPostId postId: String, completion: @escaping ([[String: Any]]) -> Void) {
         db.collection("comments").whereField("postId", isEqualTo: postId)
+            .order(by: "createdAt", descending: false) // 최신 댓글이 상단에 위치하도록 정렬
             .getDocuments { snapshot, error in
             if let error = error {
                 print("댓글 데이터 가져오기 실패: \(error)")
@@ -89,6 +90,7 @@ class FirestoreService {
         var newCommentData = commentData
         newCommentData["postId"] = postId // postId 추가
         newCommentData["commentId"] = UUID().uuidString // UUID로 commentId 생성 및 추가
+        newCommentData["createdAt"] = FieldValue.serverTimestamp() // Firestore 서버 타임스탬프 추가
         
         db.collection("comments").addDocument(data: newCommentData) { error in
             if let error = error {
